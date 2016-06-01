@@ -1,0 +1,54 @@
+<navegation></navegation>
+<div class="container">
+  <page-header content="vm.pageHeader"></page-header>
+  <div class="col-xs-12 col-sm-4">
+    <button class="btn btn-primary" ng-click="vm.popupNewForm()">Add new bill</button>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-8">
+      <div class="col-xs-12 col-sm-4">
+        <p class="lead">{{ vm.title }}</p>
+      </div>
+      <div class="row list-group">
+        <div class="col-xs-12 list-group-item" style="background-color: #f0f0f0; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+          <div class="col-xs-2">
+            <p>Name</p>
+          </div>
+          <div class="col-xs-2">
+            <p>Pay Day</p>
+          </div>
+          <div class="col-xs-2">
+            <p>Auto Pay</p>
+          </div>
+          <div class="col-xs-2">
+            <p>Payed</p>
+          </div>
+        </div>
+        <div class="col-xs-12 list-group-item" ng-repeat="bill in vm.data.bills | filter : textFilter">
+          <div class="col-xs-2">
+            <p>{{bill.name}}</p>
+          </div>
+          <div class="col-xs-2">
+            <p>{{bill.payday}}</p>
+          </div>
+          <div class="col-xs-2">
+            <p ng-hide="!bill.autopay">yes</p>
+            <p ng-hide="bill.autopay">no</p>
+          </div>
+          <div class="col-xs-2"> 
+            <button ng-hide="!bill.payed" class="btn btn-primary glyphicon glyphicon-thumbs-up" ng-click="vm.changePay(bill)">
+            <button ng-hide="bill.payed" class="btn btn-danger glyphicon glyphicon-thumbs-down" ng-click="vm.changePay(bill)">
+          </div>
+          <div class="col-xs-2">
+            <button class="btn btn-primary" ng-click="vm.popupEditForm(bill)">edit</button>
+          </div>
+          <div class="col-xs-2">
+            <button class="btn btn-danger" ng-click="vm.popupDelete(bill)">delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer-generic>
+  </footer-generic>
+</div>
