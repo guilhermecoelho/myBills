@@ -32,10 +32,17 @@ module.exports.register = function (req, res) {
             sendJSONresponse(res, 404, err);
         } else {
             //token = user.generateJwt();
-            mailer().sendEmailConfirmUser(user.tokenValidation, user.email, user.name, function () {
-                sendJSONresponse(res, 200, {
-                    "success": "We sent a confirmation email to you, please check your email box to continue the register"
-                });
+            mailer().sendEmailConfirmUser(user.tokenValidation, user.email, user.name, function (err) {
+                console.log(err);
+                if (err) {
+                    sendJSONresponse(res, 404, {
+                        "error": "A error occurred, please try again later"
+                    });
+                } else {
+                    sendJSONresponse(res, 200, {
+                        "success": "We sent a confirmation email to you, please check your email box to continue the register"
+                    });
+                }
             });
         }
     });
@@ -106,10 +113,17 @@ module.exports.newTokenValidation = function (req, res) {
                     if (err) {
                         sendJSONresponse(res, 404, err);
                     } else {
-                        mailer().sendEmailConfirmUser(user.tokenValidation, user.email, user.name, function () {
-                            sendJSONresponse(res, 200, {
-                                "success": "a new email was sent to you, please check youe mail box"
-                            });
+                        mailer().sendEmailConfirmUser(user.tokenValidation, user.email, user.name, function (err) {
+                            console.log(err);
+                            if (err) {
+                                sendJSONresponse(res, 404, {
+                                    "error": "A error occurred, please try again later"
+                                });
+                            } else {
+                                sendJSONresponse(res, 200, {
+                                    "success": "a new email was sent to you, please check your mail box"
+                                });
+                            }
                         });
                     }
                 });

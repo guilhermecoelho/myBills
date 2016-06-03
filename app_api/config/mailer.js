@@ -7,7 +7,7 @@ module.exports = function (token, email, name, callback) {
         service: 'Gmail',
         auth: {
             user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
+            pass: '00'//process.env.EMAIL_PASS
         }
     });
 
@@ -24,16 +24,18 @@ module.exports = function (token, email, name, callback) {
         var to = email;
         var authenticationURL = 'http://localhost:3000/#/confirmEmail/' + token;
         var text = "Confirm your email clicking on link " + authenticationURL;
-
+            
         transporter.sendMail(mailOptions(subject, text, to), function (err, info) {
             if (err) {
                 console.log(err);
+                callback(err);
             } else {
                 console.log("sent: " + info.response);
+                callback();
             }
         }, process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0');
 
-        callback();
+        
     };
 
     return {
