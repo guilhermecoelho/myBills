@@ -4,8 +4,6 @@
     homeCtrl.$inject = ['billData', '$modal', '$log', 'authentication', '$location'];
 
     function homeCtrl(billData, $modal, $log, authentication, $location) {
-
-
         var vm = this;
 
         vm.isLoggedIn = authentication.isLoggedIn();

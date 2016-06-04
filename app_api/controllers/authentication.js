@@ -45,23 +45,26 @@ module.exports.updateRegister = function (req, res) {
         return;
     }
 
-    var user = new User();
+    User.findOne({ email: req.body.email })
+        .exec(function (err, data) {
+            
+            data._id = req.body.id;
+            data.email = req.body.email;
+            data.name = req.body.name;
+            data.setPassword(req.body.password);
 
-    user.email = req.body.email;
-    user.name = req.body.name;
-    user.setPassword(req.body.password);
-
-    user.save()
-        .then(function (user) {
-            sendJSONresponse(res, 200, {
-                "message": "User Update!"
-            });
+            data.save()
+                .then(function (user) {
+                    sendJSONresponse(res, 200, {
+                        "message": "User Update!"
+                    });
+                })
+                .then(undefined, function (err) {
+                    sendJSONresponse(res, 404, {
+                        "error": "A error occurred, please try again later"
+                    });
+                });
         })
-        .then(undefined, function (err) {
-            sendJSONresponse(res, 404, {
-                "error": "A error occurred, please try again later"
-            });
-        });
 };
 
 //validate login and send token

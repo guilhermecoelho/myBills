@@ -87,6 +87,7 @@
             saveToken: saveToken,
             getToken: getToken,
             register: register,
+            updateRegister: updateRegister,
             login: login,
             logout: logout,
             isLoggedIn: isLoggedIn,

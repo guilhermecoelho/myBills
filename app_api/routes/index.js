@@ -17,7 +17,7 @@ router.delete('/bills/:billId', auth, ctrlBills.billDelete);
 
 //routers login
 router.post('/register', ctrlAuth.register);
-router.post('/register', auth, ctrlAuth.updateRegister);  
+router.put('/updateRegister', auth, ctrlAuth.updateRegister);  
 router.post('/login', ctrlAuth.login);
 router.get('/confirmemail/:token', ctrlAuth.confirmEmail);
 router.get('/newTokenValidation/:email', ctrlAuth.newTokenValidation);

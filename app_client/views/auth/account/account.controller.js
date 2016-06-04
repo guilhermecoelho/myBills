@@ -5,6 +5,7 @@
         .controller('accountCtrl', accountCtrl);
 
     accountCtrl.$inject = ['$location', 'authentication', '$routeParams'];
+    
     function accountCtrl($location, authentication, $routeParams) {
         var vm = this;
 
@@ -51,7 +52,7 @@
         vm.Update = function () {
             vm.formError = "";
             authentication
-                .register(vm.credentials)
+                .updateRegister(vm.credentials)
                 .error(function (err) {
                     vm.formError = err.message;
                 })
