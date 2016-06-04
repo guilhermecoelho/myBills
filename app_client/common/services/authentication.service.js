@@ -29,7 +29,8 @@
                 var token = getToken();
                 var payload = JSON.parse($window.atob(token.split('.')[1]));
                 return {
-                    name: payload.name
+                    name: payload.name,
+                    id: payload._id
                 };
             }
         };
@@ -39,6 +40,14 @@
                 .success(function (data) {
                     saveToken(data.token);
                 });
+        };
+
+        updateRegister = function (user) {
+            return $http.put('/api/updateRegister', user, {
+                headers: {
+                    Authorization: 'Bearer ' + getToken()
+                }
+            });
         };
 
         login = function (user) {
@@ -66,6 +75,14 @@
             $window.localStorage.removeItem('billApp-token');
         }
 
+        account = function (id) {
+            return $http.get('/api/account/' + id, {
+                headers: {
+                    Authorization: 'Bearer ' + getToken()
+                }
+            })
+        };
+
         return {
             saveToken: saveToken,
             getToken: getToken,
@@ -75,7 +92,8 @@
             isLoggedIn: isLoggedIn,
             currentUser: currentUser,
             confirmEmail: confirmEmail,
-            newTokenValidation: newTokenValidation
+            newTokenValidation: newTokenValidation,
+            account: account
         };
     }
 })(); 

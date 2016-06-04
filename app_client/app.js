@@ -38,6 +38,11 @@
                 controller: 'notValidatedCtrl',
                 controllerAs: 'vm'
             })
+            .when('/account/:id', {
+                templateUrl: '/views/auth/account/account.view.html',
+                controller: 'accountCtrl',
+                controllerAs: 'vm'
+            })
             .otherwise({ redirectTo: '/' });
 
         $locationProvider.html5Mode({

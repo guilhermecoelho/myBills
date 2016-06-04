@@ -31,8 +31,37 @@ module.exports.register = function (req, res) {
         subject: "Confirm your email",
         html: process.env.CONFIRM_EMAIL_URL + user.tokenValidation
     }
-
     saveUser(user, emailOptions, res);
+
+
+};
+
+//Update user
+module.exports.updateRegister = function (req, res) {
+    if (!req.body.email || !req.body.name || !req.body.password) {
+        sendJSONresponse(res, 400, {
+            "message": "All fields required"
+        });
+        return;
+    }
+
+    var user = new User();
+
+    user.email = req.body.email;
+    user.name = req.body.name;
+    user.setPassword(req.body.password);
+
+    user.save()
+        .then(function (user) {
+            sendJSONresponse(res, 200, {
+                "message": "User Update!"
+            });
+        })
+        .then(undefined, function (err) {
+            sendJSONresponse(res, 404, {
+                "error": "A error occurred, please try again later"
+            });
+        });
 };
 
 //validate login and send token
@@ -95,7 +124,7 @@ module.exports.newTokenValidation = function (req, res) {
                 html: process.env.CONFIRM_EMAIL_URL + user.tokenValidation
             }
             saveUser(user, emailOptions, res);
-                
+
         })
         .then(undefined, function (err) {
             sendJSONresponse(res, 404, {
@@ -106,6 +135,35 @@ module.exports.newTokenValidation = function (req, res) {
         .catch(console.log)
         .done();
 };
+
+//find user by id
+module.exports.account = function (req, res) {
+    var id = req.params.id;
+    User
+        .findOne({ _id: id }).exec()
+        .then(function (user) {
+            if (!user) {
+                sendJSONresponse(res, 200, {
+                    "message": "User not found"
+                });
+            } else {
+                sendJSONresponse(res, 200, {
+                    _id: user._id,
+                    name: user.name,
+                    email: user.email
+                });
+            }
+        })
+        .then(undefined, function (err) {
+            console.log(err);
+            sendJSONresponse(res, 404, {
+                "message": "A error occurred, please try again later"
+            });
+        });
+}
+
+//// functions ////
+
 
 function validateUser(user, res) {
     user.isValidated = true;

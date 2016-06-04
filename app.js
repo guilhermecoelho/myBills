@@ -33,6 +33,7 @@ var appClientFiles = [
   'app_client/views/auth/register/register.controller.js',
   'app_client/views/auth/login/login.controller.js',
   'app_client/views/auth/confirmEmail/confirmEmail.controller.js',
+  'app_client/views/auth/account/account.controller.js',
   'app_client/views/modals/confirm.controller.js',
   'app_client/views/modals/alert/alert.controller.js',
   'app_client/common/filters/addHtmlLineBreaks.filter.js',

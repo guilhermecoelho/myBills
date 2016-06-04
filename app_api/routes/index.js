@@ -17,9 +17,11 @@ router.delete('/bills/:billId', auth, ctrlBills.billDelete);
 
 //routers login
 router.post('/register', ctrlAuth.register);
+router.post('/register', auth, ctrlAuth.updateRegister);  
 router.post('/login', ctrlAuth.login);
 router.get('/confirmemail/:token', ctrlAuth.confirmEmail);
 router.get('/newTokenValidation/:email', ctrlAuth.newTokenValidation);
+router.get('/account/:id', auth, ctrlAuth.account);
 
 
 module.exports = router;

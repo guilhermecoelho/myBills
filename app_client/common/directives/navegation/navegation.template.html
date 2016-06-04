@@ -9,7 +9,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li ng-hide="navvm.isLoggedIn"><a href="/#login/?page={{ navvm.currentPath }}">Sign in</a></li>
-        <li ng-show="navvm.isLoggedIn"><a href="" >Welcome {{ navvm.currentUser.name }}</a></li>
+        <li ng-show="navvm.isLoggedIn"><a href="/#account/{{ navvm.currentUser.id }}" >Welcome {{ navvm.currentUser.name }}</a></li>
         <li ng-show="navvm.isLoggedIn"><a href="" ng-click="navvm.logout()">Logout</a></li>
         <!--<li ng-show="navvm.isLoggedIn" class="dropdown">
           <a href="" class="dropdown-toggle" data-toggle="dropdown">{{ navvm.currentUser.name }} <span class="caret"></span></a>
