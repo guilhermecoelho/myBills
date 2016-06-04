@@ -54,7 +54,6 @@ userSchema.methods.generateTokenValidation = function (email) {
     var authToken = crypto.createHash('sha1').update(seed + email).digest('hex');
     
     return authToken;
-
 };
 
 mongoose.model('User', userSchema);

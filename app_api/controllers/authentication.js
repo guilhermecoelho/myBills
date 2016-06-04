@@ -26,26 +26,13 @@ module.exports.register = function (req, res) {
 
     user.tokenValidation = user.generateTokenValidation();
 
-    user.save(function (err) {
-        var token;
-        if (err) {
-            sendJSONresponse(res, 404, err);
-        } else {
-            //token = user.generateJwt();
-            mailer().sendEmailConfirmUser(user.tokenValidation, user.email, user.name, function (err) {
-                console.log(err);
-                if (err) {
-                    sendJSONresponse(res, 404, {
-                        "error": "A error occurred, please try again later"
-                    });
-                } else {
-                    sendJSONresponse(res, 200, {
-                        "success": "We sent a confirmation email to you, please check your email box to continue the register"
-                    });
-                }
-            });
-        }
-    });
+    var emailOptions = {
+        destiny: user.email,
+        subject: "Confirm your email",
+        html: process.env.CONFIRM_EMAIL_URL + user.tokenValidation
+    }
+
+    saveUser(user, emailOptions, res);
 };
 
 //validate login and send token
@@ -93,42 +80,31 @@ module.exports.confirmEmail = function (req, res) {
         });
 };
 
+
+//send new email with token
 module.exports.newTokenValidation = function (req, res) {
     var userEmail = req.params.email;
+
     User
-        .findOne({ email: userEmail })
-        .exec(function (err, user) {
-            if (!user) {
-                sendJSONresponse(res, 404, {
-                    "message": "user not found"
-                });
-                return;
-            } else if (err) {
-                sendJSONresponse(res, 404, err);
-                return;
-            } else {
-                user.tokenValidation = user.generateTokenValidation();
-                user.save(function (err) {
-                    var token;
-                    if (err) {
-                        sendJSONresponse(res, 404, err);
-                    } else {
-                        mailer().sendEmailConfirmUser(user.tokenValidation, user.email, user.name, function (err) {
-                            console.log(err);
-                            if (err) {
-                                sendJSONresponse(res, 404, {
-                                    "error": "A error occurred, please try again later"
-                                });
-                            } else {
-                                sendJSONresponse(res, 200, {
-                                    "success": "a new email was sent to you, please check your mail box"
-                                });
-                            }
-                        });
-                    }
-                });
+        .findOne({ email: userEmail }).exec()
+        .then(function (user) {
+            user.tokenValidation = user.generateTokenValidation();
+            var emailOptions = {
+                destiny: user.email,
+                subject: "Confirm your email",
+                html: process.env.CONFIRM_EMAIL_URL + user.tokenValidation
             }
-        });
+            saveUser(user, emailOptions, res);
+                
+        })
+        .then(undefined, function (err) {
+            sendJSONresponse(res, 404, {
+                "message": "user not found"
+            });
+            return;
+        })
+        .catch(console.log)
+        .done();
 };
 
 function validateUser(user, res) {
@@ -145,5 +121,30 @@ function validateUser(user, res) {
             });
         }
     });
+}
 
+function sendEmail(emailOptions, res) {
+    mailer().sendEmail(emailOptions, function (err) {
+        if (err) {
+            sendJSONresponse(res, 404, {
+                "error": "A error occurred, please try again later"
+            });
+        } else {
+            sendJSONresponse(res, 200, {
+                "success": "a new email was sent to you, please check your mail box"
+            });
+        }
+    });
+}
+
+function saveUser(user, emailOptions, res) {
+    user.save()
+        .then(function (user) {
+            sendEmail(emailOptions, res);
+        })
+        .then(undefined, function (err) {
+            sendJSONresponse(res, 404, {
+                "error": "A error occurred, please try again later"
+            });
+        });
 }
